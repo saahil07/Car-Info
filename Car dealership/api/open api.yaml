@@ -1,0 +1,186 @@
+swagger: "2.0"
+info:
+  description: "This is api documentation for carDealership"
+  version: "1.0.0"
+  title: "Car Dealership"
+  contact:
+    email: "sahil.gupta@zopsmart.com"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+host: "localhost:8060"
+tags:
+- name: "car"
+  description: "Everything about Cars"
+schemes:
+- "https"
+- "http"
+paths:
+  /car:
+    post:
+      tags:
+      - "car"
+      summary: "Create car"
+      description: "This will make a new car in database"
+      operationId: "createCar"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Created car object"
+        required: true
+        schema:
+          $ref: "#/definitions/car"
+      responses:
+        default:
+          description: "successful operation"
+  /car/upd/{id}:
+    put:
+      tags:
+      - "car"
+      summary: "Update an existing car"
+      description: ""
+      operationId: "updateCar"
+      consumes:
+      - "application/json"
+      - "application/xml"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "Car object that needs to be updated to the store"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "body"
+        description: "Created car object"
+        required: true
+        schema:
+          $ref: "#/definitions/car"
+      responses:
+        "400":
+          description: "Invalid ID supplied"
+        "404":
+          description: "car not found"
+        "405":
+          description: "Validation exception"
+  /car/{id}:
+    get:
+      tags:
+      - "car"
+      summary: "Find car by ID"
+      description: "Returns a single car for the given id"
+      operationId: "getById"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "ID of car to return"
+        required: true
+        type: "string"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/car"
+        "400":
+          description: "Invalid ID supplied"
+        "404":
+          description: "Car not found"
+  /car/del/{id}:
+    delete:
+      tags:
+      - "car"
+      summary: "Deletes a car"
+      description: "Delets a car record from database"
+      operationId: "deleteCar"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "Car id to delete"
+        required: true
+        type: "string"
+      responses:
+        "400":
+          description: "Invalid ID supplied"
+        "404":
+          description: "Car not found"
+  /cars:
+    get:
+      tags:
+      - "car"
+      summary: "Find Cars by brand"
+      description: "Return multiple cars given in the brand"
+      operationId: "findCarsByBrand"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "brand"
+        in: "query"
+        description: "Brand values that need to be considered for filter"
+        required: true
+        type: "array"
+        items:
+          type: "string"
+          enum:
+          - "Tesla"
+          - "Porsche"
+          - "Ferrari"
+          - "Mercedes"
+          - "BMW"
+          default: "Tesla"
+      - name: "Engine"
+        in: "query"
+        description: "Engine information"
+        required: true
+        type: "array"
+        items:
+          type: "string"
+          enum:
+          - "true"
+          - "false"
+          default: "true"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/car"
+        "400":
+          description: "Invalid status value"
+definitions:
+  car:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+      name:
+        type: "string"
+      year:
+        type: "integer"
+        format: "int32"
+      brand:
+        type: "string"
+      FuelType:
+        type: "string"
+      engine:
+        type: "object"
+        properties:
+          displacement:
+            type: "integer"
+          cylinders:
+            type: "integer"
+          range:
+            type: "integer"
+    xml:
+      name: "Car"
